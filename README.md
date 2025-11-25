@@ -194,7 +194,7 @@
         .pile-card {
             width: 130px;
             height: 200px;
-            background: #fff;
+            background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
             border-radius: 0.75rem;
             border: 4px solid #fbcfe8;
             display: flex;
@@ -207,10 +207,15 @@
             overflow: hidden;
         }
 
-        .pile-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .pile-card-inner {
+            width: 90%;
+            height: 90%;
+            background: white;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
         }
 
         .pile-card:not(:first-child) {
@@ -303,19 +308,19 @@
                     <p class="instruction">Think of your question and tap a card...</p>
                     <div class="card-pile">
                         <div class="pile-card" onclick="drawYesNo()">
-                            <img src="https://www.sacred-texts.com/tarot/pkt/img/cardb.jpg" alt="Card Back">
+                            <div class="pile-card-inner">🔮</div>
                         </div>
                         <div class="pile-card" onclick="drawYesNo()">
-                            <img src="https://www.sacred-texts.com/tarot/pkt/img/cardb.jpg" alt="Card Back">
+                            <div class="pile-card-inner">🔮</div>
                         </div>
                         <div class="pile-card" onclick="drawYesNo()">
-                            <img src="https://www.sacred-texts.com/tarot/pkt/img/cardb.jpg" alt="Card Back">
+                            <div class="pile-card-inner">🔮</div>
                         </div>
                         <div class="pile-card" onclick="drawYesNo()">
-                            <img src="https://www.sacred-texts.com/tarot/pkt/img/cardb.jpg" alt="Card Back">
+                            <div class="pile-card-inner">🔮</div>
                         </div>
                         <div class="pile-card" onclick="drawYesNo()">
-                            <img src="https://www.sacred-texts.com/tarot/pkt/img/cardb.jpg" alt="Card Back">
+                            <div class="pile-card-inner">🔮</div>
                         </div>
                     </div>
                 </div>
