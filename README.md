@@ -48,6 +48,7 @@
             gap: 1rem;
             justify-content: center;
             margin-bottom: 2rem;
+            flex-wrap: wrap;
         }
 
         .tab-btn {
@@ -295,6 +296,107 @@
         .hidden {
             display: none;
         }
+
+        /* Chat Styles */
+        .chat-container {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            max-height: 500px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            border: 2px solid #fbcfe8;
+        }
+
+        .chat-message {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .chat-message.user {
+            background: linear-gradient(135deg, #fce7f3 0%, #ffe4e6 100%);
+            color: #9f1239;
+            margin-left: 2rem;
+            border: 1px solid #fbcfe8;
+        }
+
+        .chat-message.ai {
+            background: white;
+            color: #be185d;
+            margin-right: 2rem;
+            border: 2px solid #fbcfe8;
+        }
+
+        .chat-message.ai strong {
+            color: #ec4899;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid #fbcfe8;
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .chat-input:focus {
+            border-color: #ec4899;
+        }
+
+        .chat-send-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(90deg, #ec4899 0%, #f43f5e 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chat-send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .chat-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .chat-intro {
+            text-align: center;
+            color: #be185d;
+            padding: 2rem;
+        }
+
+        .chat-intro h3 {
+            color: #ec4899;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .loading-dots {
+            display: inline-block;
+        }
+
+        .loading-dots::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
     </style>
 </head>
 <body>
@@ -307,6 +409,7 @@
         <div class="tab-buttons">
             <button class="tab-btn active" onclick="showTab('daily')">Daily Card</button>
             <button class="tab-btn" onclick="showTab('yesno')">Yes/No Question</button>
+            <button class="tab-btn" onclick="showTab('chat')">AI Tarot Chat</button>
         </div>
 
         <!-- Daily Card Section -->
@@ -365,6 +468,48 @@
                         <div class="answer-message" id="answer-message"></div>
                     </div>
                     <button class="draw-button secondary-button" onclick="resetYesNo()">Ask Another Question</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Chat Section -->
+        <div id="chat-section" class="section">
+            <div class="card-container">
+                <h2 class="section-title">🔮 AI Tarot Chat</h2>
+                
+                <div id="chat-intro" class="chat-intro">
+                    <h3>Talk to Your Tarot Guide</h3>
+                    <p>Draw a card and have a personal conversation about your reading. Ask questions, seek clarity, and get guidance tailored to your unique situation.</p>
+                    <button class="draw-button" onclick="startChat()" style="margin-top: 1rem;">Draw Card & Start Chat</button>
+                </div>
+
+                <div id="chat-active" class="hidden">
+                    <div class="daily-card-result" style="margin-bottom: 1.5rem;">
+                        <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem;">
+                            <div style="flex-shrink: 0; width: 100px;">
+                                <img id="chat-card-img" src="" alt="Tarot Card" style="width: 100%; border-radius: 0.5rem;">
+                            </div>
+                            <div>
+                                <div class="card-name" id="chat-card-name" style="margin-bottom: 0.5rem;"></div>
+                                <div style="color: #be185d; font-size: 0.9rem;" id="chat-card-meaning"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-container" id="chat-messages"></div>
+                    
+                    <div class="chat-input-container">
+                        <input 
+                            type="text" 
+                            id="chat-input" 
+                            class="chat-input" 
+                            placeholder="Ask about your reading..."
+                            onkeypress="if(event.key === 'Enter') sendMessage()"
+                        >
+                        <button class="chat-send-btn" onclick="sendMessage()" id="send-btn">Send</button>
+                    </div>
+
+                    <button class="draw-button secondary-button" onclick="resetChat()" style="margin-top: 1rem;">Start New Reading</button>
                 </div>
             </div>
         </div>
@@ -537,6 +682,7 @@
             // Hide all sections
             document.getElementById('daily-section').classList.remove('active');
             document.getElementById('yesno-section').classList.remove('active');
+            document.getElementById('chat-section').classList.remove('active');
             
             // Remove active class from all buttons
             const buttons = document.querySelectorAll('.tab-btn');
@@ -546,9 +692,12 @@
             if (tab === 'daily') {
                 document.getElementById('daily-section').classList.add('active');
                 buttons[0].classList.add('active');
-            } else {
+            } else if (tab === 'yesno') {
                 document.getElementById('yesno-section').classList.add('active');
                 buttons[1].classList.add('active');
+            } else if (tab === 'chat') {
+                document.getElementById('chat-section').classList.add('active');
+                buttons[2].classList.add('active');
             }
         }
 
@@ -587,6 +736,122 @@
         function resetYesNo() {
             document.getElementById('yesno-intro').classList.remove('hidden');
             document.getElementById('yesno-result').classList.add('hidden');
+        }
+
+        // AI Chat Functions
+        let currentCard = null;
+        let chatHistory = [];
+
+        async function startChat() {
+            // Draw a random card
+            currentCard = tarotCards[Math.floor(Math.random() * tarotCards.length)];
+            const reversed = Math.random() > 0.5;
+            
+            const cardImage = `https://sacred-texts.com/tarot/pkt/img/${currentCard.code}.jpg`;
+            
+            // Display card
+            document.getElementById('chat-card-img').src = cardImage;
+            document.getElementById('chat-card-img').style.transform = reversed ? 'rotate(180deg)' : 'rotate(0deg)';
+            document.getElementById('chat-card-name').textContent = currentCard.name + (reversed ? ' (Reversed)' : '');
+            document.getElementById('chat-card-meaning').textContent = currentCard.meaning;
+            
+            // Show chat interface
+            document.getElementById('chat-intro').classList.add('hidden');
+            document.getElementById('chat-active').classList.remove('hidden');
+            
+            // Initialize chat with AI greeting
+            chatHistory = [];
+            const greeting = `Hello! I've drawn ${currentCard.name} for you. ${currentCard.prediction} ${currentCard.advice}\n\nWhat would you like to know about this reading? Feel free to ask about how it applies to your specific situation.`;
+            
+            addMessage('ai', greeting);
+        }
+
+        function addMessage(sender, text) {
+            const messagesDiv = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender}`;
+            
+            if (sender === 'ai') {
+                messageDiv.innerHTML = `<strong>✨ Tarot Guide:</strong><br>${text}`;
+            } else {
+                messageDiv.textContent = text;
+            }
+            
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessage('user', message);
+            input.value = '';
+            
+            // Disable send button
+            const sendBtn = document.getElementById('send-btn');
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Thinking';
+            sendBtn.innerHTML = 'Thinking<span class="loading-dots"></span>';
+            
+            // Add to history
+            chatHistory.push({ role: 'user', content: message });
+            
+            try {
+                // Call Claude API
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: 1000,
+                        messages: [
+                            {
+                                role: 'user',
+                                content: `You are a wise and compassionate tarot guide. The user has drawn the tarot card "${currentCard.name}". 
+
+Card meaning: ${currentCard.meaning}
+Prediction: ${currentCard.prediction}
+Advice: ${currentCard.advice}
+
+Previous conversation:
+${chatHistory.slice(-4).map(m => `${m.role}: ${m.content}`).join('\n')}
+
+Current question: ${message}
+
+Provide a thoughtful, personalized response that relates the card's wisdom to their specific question. Be warm, insightful, and encouraging. Keep your response under 150 words.`
+                            }
+                        ]
+                    })
+                });
+
+                const data = await response.json();
+                const aiResponse = data.content[0].text;
+                
+                // Add AI response
+                addMessage('ai', aiResponse);
+                chatHistory.push({ role: 'assistant', content: aiResponse });
+                
+            } catch (error) {
+                addMessage('ai', "I apologize, but I'm having trouble connecting right now. Please try asking your question again in a moment.");
+            }
+            
+            // Re-enable send button
+            sendBtn.disabled = false;
+            sendBtn.textContent = 'Send';
+        }
+
+        function resetChat() {
+            document.getElementById('chat-intro').classList.remove('hidden');
+            document.getElementById('chat-active').classList.add('hidden');
+            document.getElementById('chat-messages').innerHTML = '';
+            chatHistory = [];
+            currentCard = null;
         }
     </script>
 </body>
