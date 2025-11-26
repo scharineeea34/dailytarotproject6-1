@@ -138,6 +138,38 @@
         .card-meaning {
             color: #be185d;
             line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .card-prediction {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            color: #9f1239;
+            margin-bottom: 1rem;
+            border-left: 4px solid #ec4899;
+        }
+
+        .card-prediction strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ec4899;
+            font-size: 1.1rem;
+        }
+
+        .card-advice {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            color: #9f1239;
+            border-left: 4px solid #f43f5e;
+        }
+
+        .card-advice strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #f43f5e;
+            font-size: 1.1rem;
         }
 
         .reversed {
@@ -292,6 +324,8 @@
                         <div class="card-display" id="daily-card-icon"></div>
                         <div class="card-name" id="daily-card-name"></div>
                         <div class="card-meaning" id="daily-card-meaning"></div>
+                        <div class="card-prediction" id="daily-card-prediction"></div>
+                        <div class="card-advice" id="daily-card-advice"></div>
                         <div class="reversed hidden" id="daily-card-reversed">(Reversed)</div>
                     </div>
                     <button class="draw-button secondary-button" onclick="drawDailyCard()">Draw Another Card</button>
@@ -342,27 +376,153 @@
 
     <script>
         const tarotCards = [
-            { name: "The Fool", meaning: "New beginnings, innocence, spontaneity, free spirit", code: "ar00" },
-            { name: "The Magician", meaning: "Manifestation, resourcefulness, power, inspired action", code: "ar01" },
-            { name: "The High Priestess", meaning: "Intuition, sacred knowledge, divine feminine", code: "ar02" },
-            { name: "The Empress", meaning: "Femininity, beauty, nature, nurturing, abundance", code: "ar03" },
-            { name: "The Emperor", meaning: "Authority, structure, control, fatherhood", code: "ar04" },
-            { name: "The Lovers", meaning: "Love, harmony, relationships, values alignment", code: "ar06" },
-            { name: "The Chariot", meaning: "Control, willpower, success, determination", code: "ar07" },
-            { name: "Strength", meaning: "Strength, courage, patience, compassion", code: "ar08" },
-            { name: "The Hermit", meaning: "Soul searching, introspection, inner guidance", code: "ar09" },
-            { name: "Wheel of Fortune", meaning: "Good luck, karma, life cycles, destiny", code: "ar10" },
-            { name: "Justice", meaning: "Justice, fairness, truth, cause and effect", code: "ar11" },
-            { name: "The Hanged Man", meaning: "Pause, surrender, letting go, new perspective", code: "ar12" },
-            { name: "Death", meaning: "Endings, change, transformation, transition", code: "ar13" },
-            { name: "Temperance", meaning: "Balance, moderation, patience, purpose", code: "ar14" },
-            { name: "The Devil", meaning: "Shadow self, attachment, addiction, restriction", code: "ar15" },
-            { name: "The Tower", meaning: "Sudden change, upheaval, chaos, revelation", code: "ar16" },
-            { name: "The Star", meaning: "Hope, faith, purpose, renewal, spirituality", code: "ar17" },
-            { name: "The Moon", meaning: "Illusion, fear, anxiety, subconscious, intuition", code: "ar18" },
-            { name: "The Sun", meaning: "Positivity, fun, warmth, success, vitality", code: "ar19" },
-            { name: "Judgement", meaning: "Judgement, rebirth, inner calling, absolution", code: "ar20" },
-            { name: "The World", meaning: "Completion, accomplishment, travel, fulfillment", code: "ar21" }
+            { 
+                name: "The Fool", 
+                meaning: "New beginnings, innocence, spontaneity, free spirit", 
+                prediction: "Today brings new opportunities and fresh starts. Embrace the unknown with an open heart.",
+                advice: "Take a leap of faith today. Trust your instincts and don't be afraid to try something new, even if it feels uncertain.",
+                code: "ar00" 
+            },
+            { 
+                name: "The Magician", 
+                meaning: "Manifestation, resourcefulness, power, inspired action", 
+                prediction: "You have all the tools you need to succeed. Your skills and talents will shine brightly today.",
+                advice: "Focus your energy and intentions. Use your creativity and take decisive action toward your goals.",
+                code: "ar01" 
+            },
+            { 
+                name: "The High Priestess", 
+                meaning: "Intuition, sacred knowledge, divine feminine", 
+                prediction: "Hidden knowledge and intuitive insights will come to you. Trust what you feel, not just what you see.",
+                advice: "Listen to your inner voice today. Spend time in quiet reflection and trust your intuition over logic.",
+                code: "ar02" 
+            },
+            { 
+                name: "The Empress", 
+                meaning: "Femininity, beauty, nature, nurturing, abundance", 
+                prediction: "A day of growth, creativity, and abundance. Nature and nurturing energy surround you.",
+                advice: "Connect with nature and beauty today. Practice self-care and extend kindness to yourself and others.",
+                code: "ar03" 
+            },
+            { 
+                name: "The Emperor", 
+                meaning: "Authority, structure, control, fatherhood", 
+                prediction: "Structure and discipline will bring results. Your leadership qualities are needed today.",
+                advice: "Create order from chaos. Set clear boundaries and take charge of your responsibilities with confidence.",
+                code: "ar04" 
+            },
+            { 
+                name: "The Lovers", 
+                meaning: "Love, harmony, relationships, values alignment", 
+                prediction: "Important choices about relationships or values may arise. Harmony and connection are highlighted.",
+                advice: "Make decisions that align with your heart and values. Strengthen your important relationships today.",
+                code: "ar06" 
+            },
+            { 
+                name: "The Chariot", 
+                meaning: "Control, willpower, success, determination", 
+                prediction: "Victory is within reach through determination and focused effort. You're moving forward with momentum.",
+                advice: "Stay focused on your goals and push through any obstacles. Your willpower will lead you to success.",
+                code: "ar07" 
+            },
+            { 
+                name: "Strength", 
+                meaning: "Strength, courage, patience, compassion", 
+                prediction: "Inner strength and courage will help you overcome challenges with grace and compassion.",
+                advice: "Be gentle but firm today. Handle difficult situations with patience and kindness rather than force.",
+                code: "ar08" 
+            },
+            { 
+                name: "The Hermit", 
+                meaning: "Soul searching, introspection, inner guidance", 
+                prediction: "A day for solitude and self-reflection. Important insights will come from within.",
+                advice: "Take time alone to reflect and recharge. Seek wisdom from within rather than external sources.",
+                code: "ar09" 
+            },
+            { 
+                name: "Wheel of Fortune", 
+                meaning: "Good luck, karma, life cycles, destiny", 
+                prediction: "Change is coming, and luck is on your side. The wheel is turning in your favor.",
+                advice: "Go with the flow and embrace change. What seems like chance today is actually destiny unfolding.",
+                code: "ar10" 
+            },
+            { 
+                name: "Justice", 
+                meaning: "Justice, fairness, truth, cause and effect", 
+                prediction: "Truth and fairness will prevail. What you've sown, you will now reap.",
+                advice: "Act with integrity and fairness. Make decisions based on truth and balance, not emotion.",
+                code: "ar11" 
+            },
+            { 
+                name: "The Hanged Man", 
+                meaning: "Pause, surrender, letting go, new perspective", 
+                prediction: "A period of pause brings new understanding. Sometimes you must let go to move forward.",
+                advice: "Release your need for control. Look at situations from a different angle and be patient.",
+                code: "ar12" 
+            },
+            { 
+                name: "Death", 
+                meaning: "Endings, change, transformation, transition", 
+                prediction: "An important ending paves the way for a powerful new beginning. Transformation is at hand.",
+                advice: "Let go of what no longer serves you. Embrace the changes happening, as they lead to renewal.",
+                code: "ar13" 
+            },
+            { 
+                name: "Temperance", 
+                meaning: "Balance, moderation, patience, purpose", 
+                prediction: "Finding the middle path brings peace. Balance and moderation lead to harmony today.",
+                advice: "Practice patience and moderation. Blend different aspects of your life to create harmony.",
+                code: "ar14" 
+            },
+            { 
+                name: "The Devil", 
+                meaning: "Shadow self, attachment, addiction, restriction", 
+                prediction: "Be aware of unhealthy attachments or limiting beliefs. You have the power to break free.",
+                advice: "Examine what's holding you back. Release toxic patterns and reclaim your personal power.",
+                code: "ar15" 
+            },
+            { 
+                name: "The Tower", 
+                meaning: "Sudden change, upheaval, chaos, revelation", 
+                prediction: "Unexpected changes shake up your world, but they clear the way for truth and liberation.",
+                advice: "Stay grounded during sudden changes. What falls away was built on shaky ground; trust the process.",
+                code: "ar16" 
+            },
+            { 
+                name: "The Star", 
+                meaning: "Hope, faith, purpose, renewal, spirituality", 
+                prediction: "Hope and healing are yours today. Your wishes and dreams are closer than you think.",
+                advice: "Keep faith and stay optimistic. Your authentic self shines brightest now; share your gifts with the world.",
+                code: "ar17" 
+            },
+            { 
+                name: "The Moon", 
+                meaning: "Illusion, fear, anxiety, subconscious, intuition", 
+                prediction: "Things may not be as they seem. Trust your intuition to navigate through uncertainty.",
+                advice: "Don't make major decisions today. Wait for clarity and pay attention to your dreams and intuition.",
+                code: "ar18" 
+            },
+            { 
+                name: "The Sun", 
+                meaning: "Positivity, fun, warmth, success, vitality", 
+                prediction: "Joy, success, and vitality fill your day. Everything is illuminated by positive energy.",
+                advice: "Embrace happiness and share your light with others. Celebrate your achievements and enjoy life.",
+                code: "ar19" 
+            },
+            { 
+                name: "Judgement", 
+                meaning: "Judgement, rebirth, inner calling, absolution", 
+                prediction: "A time of reckoning and renewal. You're being called to a higher purpose or new phase of life.",
+                advice: "Reflect on your past and make peace with it. Answer your inner calling and step into your true purpose.",
+                code: "ar20" 
+            },
+            { 
+                name: "The World", 
+                meaning: "Completion, accomplishment, travel, fulfillment", 
+                prediction: "Success and completion are at hand. You've reached an important milestone on your journey.",
+                advice: "Celebrate your achievements and take a moment to appreciate how far you've come. The world is yours.",
+                code: "ar21" 
+            }
         ];
 
         const yesNoAnswers = [
@@ -401,6 +561,8 @@
             document.getElementById('daily-card-icon').innerHTML = `<img src="${cardImage}" alt="${randomCard.name}" style="transform: ${reversed ? 'rotate(180deg)' : 'rotate(0deg)'}">`;
             document.getElementById('daily-card-name').textContent = randomCard.name;
             document.getElementById('daily-card-meaning').textContent = randomCard.meaning;
+            document.getElementById('daily-card-prediction').innerHTML = `<strong>📖 Today's Prediction:</strong>${randomCard.prediction}`;
+            document.getElementById('daily-card-advice').innerHTML = `<strong>💫 Advice for Today:</strong>${randomCard.advice}`;
             
             if (reversed) {
                 document.getElementById('daily-card-reversed').classList.remove('hidden');
