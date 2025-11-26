@@ -22,6 +22,39 @@
             padding: 2rem;
             text-align: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .language-switcher {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #ec4899;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .lang-btn.active:hover {
+            background: white;
         }
 
         header h1 {
@@ -401,25 +434,31 @@
 </head>
 <body>
     <header>
-        <h1>🌙 Mystical Tarot ⭐</h1>
-        <p>Discover your daily guidance and seek answers</p>
+        <div class="language-switcher">
+            <button class="lang-btn active" onclick="setLanguage('en')" id="lang-en">EN</button>
+            <button class="lang-btn" onclick="setLanguage('th')" id="lang-th">ไทย</button>
+        </div>
+        <div>
+            <h1 id="header-title">🌙 Mystical Tarot ⭐</h1>
+            <p id="header-subtitle">Discover your daily guidance and seek answers</p>
+        </div>
     </header>
 
     <div class="container">
         <div class="tab-buttons">
-            <button class="tab-btn active" onclick="showTab('daily')">Daily Card</button>
-            <button class="tab-btn" onclick="showTab('yesno')">Yes/No Question</button>
-            <button class="tab-btn" onclick="showTab('chat')">AI Tarot Chat</button>
+            <button class="tab-btn active" onclick="showTab('daily')" id="tab-daily">Daily Card</button>
+            <button class="tab-btn" onclick="showTab('yesno')" id="tab-yesno">Yes/No Question</button>
+            <button class="tab-btn" onclick="showTab('chat')" id="tab-chat">AI Tarot Chat</button>
         </div>
 
         <!-- Daily Card Section -->
         <div id="daily-section" class="section active">
             <div class="card-container">
-                <h2 class="section-title">✨ Your Daily Card</h2>
+                <h2 class="section-title" id="daily-title">✨ Your Daily Card</h2>
                 
                 <div id="daily-intro">
-                    <p class="instruction">Draw your card for today's guidance and insight</p>
-                    <button class="draw-button" onclick="drawDailyCard()">Draw Daily Card</button>
+                    <p class="instruction" id="daily-instruction">Draw your card for today's guidance and insight</p>
+                    <button class="draw-button" onclick="drawDailyCard()" id="daily-draw-btn">Draw Daily Card</button>
                 </div>
 
                 <div id="daily-result" class="hidden">
@@ -431,7 +470,7 @@
                         <div class="card-advice" id="daily-card-advice"></div>
                         <div class="reversed hidden" id="daily-card-reversed">(Reversed)</div>
                     </div>
-                    <button class="draw-button secondary-button" onclick="drawDailyCard()">Draw Another Card</button>
+                    <button class="draw-button secondary-button" onclick="drawDailyCard()" id="daily-another-btn">Draw Another Card</button>
                 </div>
             </div>
         </div>
@@ -439,10 +478,10 @@
         <!-- Yes/No Section -->
         <div id="yesno-section" class="section">
             <div class="card-container">
-                <h2 class="section-title">✨ Ask Yes or No</h2>
+                <h2 class="section-title" id="yesno-title">✨ Ask Yes or No</h2>
                 
                 <div id="yesno-intro">
-                    <p class="instruction">Think of your question and tap a card...</p>
+                    <p class="instruction" id="yesno-instruction">Think of your question and tap a card...</p>
                     <div class="card-pile">
                         <div class="pile-card" onclick="drawYesNo()">
                             <div class="pile-card-inner">🔮</div>
@@ -467,7 +506,7 @@
                         <div class="answer-text" id="answer-text"></div>
                         <div class="answer-message" id="answer-message"></div>
                     </div>
-                    <button class="draw-button secondary-button" onclick="resetYesNo()">Ask Another Question</button>
+                    <button class="draw-button secondary-button" onclick="resetYesNo()" id="yesno-another-btn">Ask Another Question</button>
                 </div>
             </div>
         </div>
@@ -475,12 +514,12 @@
         <!-- AI Chat Section -->
         <div id="chat-section" class="section">
             <div class="card-container">
-                <h2 class="section-title">🔮 AI Tarot Chat</h2>
+                <h2 class="section-title" id="chat-title">🔮 AI Tarot Chat</h2>
                 
                 <div id="chat-intro" class="chat-intro">
-                    <h3>Talk to Your Tarot Guide</h3>
-                    <p>Draw a card and have a personal conversation about your reading. Ask questions, seek clarity, and get guidance tailored to your unique situation.</p>
-                    <button class="draw-button" onclick="startChat()" style="margin-top: 1rem;">Draw Card & Start Chat</button>
+                    <h3 id="chat-intro-title">Talk to Your Tarot Guide</h3>
+                    <p id="chat-intro-text">Draw a card and have a personal conversation about your reading. Ask questions, seek clarity, and get guidance tailored to your unique situation.</p>
+                    <button class="draw-button" onclick="startChat()" style="margin-top: 1rem;" id="chat-start-btn">Draw Card & Start Chat</button>
                 </div>
 
                 <div id="chat-active" class="hidden">
@@ -509,23 +548,115 @@
                         <button class="chat-send-btn" onclick="sendMessage()" id="send-btn">Send</button>
                     </div>
 
-                    <button class="draw-button secondary-button" onclick="resetChat()" style="margin-top: 1rem;">Start New Reading</button>
+                    <button class="draw-button secondary-button" onclick="resetChat()" style="margin-top: 1rem;" id="chat-new-btn">Start New Reading</button>
                 </div>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>✨ Trust your intuition and embrace the journey ✨</p>
+        <p id="footer-text">✨ Trust your intuition and embrace the journey ✨</p>
     </footer>
 
     <script>
+        let currentLanguage = 'en';
+
+        const translations = {
+            en: {
+                headerTitle: "🌙 Mystical Tarot ⭐",
+                headerSubtitle: "Discover your daily guidance and seek answers",
+                tabDaily: "Daily Card",
+                tabYesno: "Yes/No Question",
+                tabChat: "AI Tarot Chat",
+                dailyTitle: "✨ Your Daily Card",
+                dailyInstruction: "Draw your card for today's guidance and insight",
+                dailyDrawBtn: "Draw Daily Card",
+                dailyAnotherBtn: "Draw Another Card",
+                yesnoTitle: "✨ Ask Yes or No",
+                yesnoInstruction: "Think of your question and tap a card...",
+                yesnoAnotherBtn: "Ask Another Question",
+                chatTitle: "🔮 AI Tarot Chat",
+                chatIntroTitle: "Talk to Your Tarot Guide",
+                chatIntroText: "Draw a card and have a personal conversation about your reading. Ask questions, seek clarity, and get guidance tailored to your unique situation.",
+                chatStartBtn: "Draw Card & Start Chat",
+                chatPlaceholder: "Ask about your reading...",
+                chatSendBtn: "Send",
+                chatNewBtn: "Start New Reading",
+                footerText: "✨ Trust your intuition and embrace the journey ✨",
+                reversed: "(Reversed)",
+                predictionLabel: "📖 Today's Prediction:",
+                adviceLabel: "💫 Advice for Today:",
+                tarotGuide: "✨ Tarot Guide:"
+            },
+            th: {
+                headerTitle: "🌙 ทาโรต์มิสติก ⭐",
+                headerSubtitle: "ค้นพบคำแนะนำประจำวันและค้นหาคำตอบ",
+                tabDaily: "ไพ่ประจำวัน",
+                tabYesno: "ถามใช่หรือไม่",
+                tabChat: "แชทกับ AI ทาโรต์",
+                dailyTitle: "✨ ไพ่ประจำวันของคุณ",
+                dailyInstruction: "จั่วไพ่เพื่อรับคำแนะนำและข้อมูลเชิงลึกสำหรับวันนี้",
+                dailyDrawBtn: "จั่วไพ่ประจำวัน",
+                dailyAnotherBtn: "จั่วไพ่อีกครั้ง",
+                yesnoTitle: "✨ ถามใช่หรือไม่",
+                yesnoInstruction: "คิดถึงคำถามของคุณและแตะที่ไพ่...",
+                yesnoAnotherBtn: "ถามคำถามอื่น",
+                chatTitle: "🔮 แชทกับ AI ทาโรต์",
+                chatIntroTitle: "พูดคุยกับผู้นำทางทาโรต์",
+                chatIntroText: "จั่วไพ่และเริ่มการสนทนาส่วนตัวเกี่ยวกับการอ่านไพ่ของคุณ ถามคำถาม แสวงหาความชัดเจน และรับคำแนะนำที่เหมาะกับสถานการณ์เฉพาะของคุณ",
+                chatStartBtn: "จั่วไพ่และเริ่มแชท",
+                chatPlaceholder: "ถามเกี่ยวกับการอ่านไพ่ของคุณ...",
+                chatSendBtn: "ส่ง",
+                chatNewBtn: "เริ่มการอ่านใหม่",
+                footerText: "✨ เชื่อสัญชาตญาณและเปิดรับการเดินทาง ✨",
+                reversed: "(กลับด้าน)",
+                predictionLabel: "📖 คำทำนายวันนี้:",
+                adviceLabel: "💫 คำแนะนำสำหรับวันนี้:",
+                tarotGuide: "✨ ผู้นำทางทาโรต์:"
+            }
+        };
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update language buttons
+            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+            document.getElementById('lang-th').classList.toggle('active', lang === 'th');
+            
+            // Update all text
+            const t = translations[lang];
+            document.getElementById('header-title').textContent = t.headerTitle;
+            document.getElementById('header-subtitle').textContent = t.headerSubtitle;
+            document.getElementById('tab-daily').textContent = t.tabDaily;
+            document.getElementById('tab-yesno').textContent = t.tabYesno;
+            document.getElementById('tab-chat').textContent = t.tabChat;
+            document.getElementById('daily-title').textContent = t.dailyTitle;
+            document.getElementById('daily-instruction').textContent = t.dailyInstruction;
+            document.getElementById('daily-draw-btn').textContent = t.dailyDrawBtn;
+            document.getElementById('daily-another-btn').textContent = t.dailyAnotherBtn;
+            document.getElementById('yesno-title').textContent = t.yesnoTitle;
+            document.getElementById('yesno-instruction').textContent = t.yesnoInstruction;
+            document.getElementById('yesno-another-btn').textContent = t.yesnoAnotherBtn;
+            document.getElementById('chat-title').textContent = t.chatTitle;
+            document.getElementById('chat-intro-title').textContent = t.chatIntroTitle;
+            document.getElementById('chat-intro-text').textContent = t.chatIntroText;
+            document.getElementById('chat-start-btn').textContent = t.chatStartBtn;
+            document.getElementById('chat-input').placeholder = t.chatPlaceholder;
+            document.getElementById('send-btn').textContent = t.chatSendBtn;
+            document.getElementById('chat-new-btn').textContent = t.chatNewBtn;
+            document.getElementById('footer-text').textContent = t.footerText;
+        }
+
         const tarotCards = [
             { 
                 name: "The Fool", 
+                nameTH: "คนโง่",
                 meaning: "New beginnings, innocence, spontaneity, free spirit", 
+                meaningTH: "จุดเริ่มต้นใหม่ ความไร้เดียงสา ความเป็นธรรมชาติ จิตวิญญาณอิสระ",
                 prediction: "Today brings new opportunities and fresh starts. Embrace the unknown with an open heart.",
+                predictionTH: "วันนี้นำมาซึ่งโอกาสใหม่และการเริ่มต้นใหม่ เปิดใจรับสิ่งที่ไม่รู้ด้วยหัวใจที่เปิดกว้าง",
                 advice: "Take a leap of faith today. Trust your instincts and don't be afraid to try something new, even if it feels uncertain.",
+                adviceTH: "กล้าเสี่ยงเชื่อในวันนี้ เชื่อสัญชาตญาณของคุณและอย่ากลัวที่จะลองสิ่งใหม่ แม้มันจะรู้สึกไม่แน่นอน",
                 code: "ar00" 
             },
             { 
@@ -671,11 +802,11 @@
         ];
 
         const yesNoAnswers = [
-            { answer: "YES", message: "The cards strongly indicate yes. Trust your path forward." },
-            { answer: "NO", message: "The cards suggest no. Perhaps another direction is better." },
-            { answer: "MAYBE", message: "The answer is unclear. You may need more time or information." },
-            { answer: "YES, BUT...", message: "Yes, but proceed with caution and awareness." },
-            { answer: "NOT NOW", message: "The timing isn't right. Wait for a better moment." }
+            { answer: "YES", answerTH: "ใช่", message: "The cards strongly indicate yes. Trust your path forward.", messageTH: "ไพ่บอกว่าใช่อย่างชัดเจน เชื่อมั่นในเส้นทางที่คุณกำลังเดินไป" },
+            { answer: "NO", answerTH: "ไม่", message: "The cards suggest no. Perhaps another direction is better.", messageTH: "ไพ่บอกว่าไม่ใช่ บางทีทิศทางอื่นอาจจะดีกว่า" },
+            { answer: "MAYBE", answerTH: "อาจจะ", message: "The answer is unclear. You may need more time or information.", messageTH: "คำตอบยังไม่ชัดเจน คุณอาจต้องการเวลาหรือข้อมูลเพิ่มเติม" },
+            { answer: "YES, BUT...", answerTH: "ใช่ แต่...", message: "Yes, but proceed with caution and awareness.", messageTH: "ใช่ แต่ดำเนินการด้วยความระมัดระวังและความตระหนัก" },
+            { answer: "NOT NOW", answerTH: "ยังไม่ใช่ตอนนี้", message: "The timing isn't right. Wait for a better moment.", messageTH: "ยังไม่ใช่เวลาที่เหมาะสม รอโอกาสที่ดีกว่า" }
         ];
 
         function showTab(tab) {
@@ -706,14 +837,17 @@
             const reversed = Math.random() > 0.5;
             
             const cardImage = `https://sacred-texts.com/tarot/pkt/img/${randomCard.code}.jpg`;
+            const t = translations[currentLanguage];
+            const isEn = currentLanguage === 'en';
             
             document.getElementById('daily-card-icon').innerHTML = `<img src="${cardImage}" alt="${randomCard.name}" style="transform: ${reversed ? 'rotate(180deg)' : 'rotate(0deg)'}">`;
-            document.getElementById('daily-card-name').textContent = randomCard.name;
-            document.getElementById('daily-card-meaning').textContent = randomCard.meaning;
-            document.getElementById('daily-card-prediction').innerHTML = `<strong>📖 Today's Prediction:</strong>${randomCard.prediction}`;
-            document.getElementById('daily-card-advice').innerHTML = `<strong>💫 Advice for Today:</strong>${randomCard.advice}`;
+            document.getElementById('daily-card-name').textContent = isEn ? randomCard.name : randomCard.nameTH;
+            document.getElementById('daily-card-meaning').textContent = isEn ? randomCard.meaning : randomCard.meaningTH;
+            document.getElementById('daily-card-prediction').innerHTML = `<strong>${t.predictionLabel}</strong>${isEn ? randomCard.prediction : randomCard.predictionTH}`;
+            document.getElementById('daily-card-advice').innerHTML = `<strong>${t.adviceLabel}</strong>${isEn ? randomCard.advice : randomCard.adviceTH}`;
             
             if (reversed) {
+                document.getElementById('daily-card-reversed').textContent = t.reversed;
                 document.getElementById('daily-card-reversed').classList.remove('hidden');
             } else {
                 document.getElementById('daily-card-reversed').classList.add('hidden');
@@ -725,9 +859,10 @@
 
         function drawYesNo() {
             const randomAnswer = yesNoAnswers[Math.floor(Math.random() * yesNoAnswers.length)];
+            const isEn = currentLanguage === 'en';
             
-            document.getElementById('answer-text').textContent = randomAnswer.answer;
-            document.getElementById('answer-message').textContent = randomAnswer.message;
+            document.getElementById('answer-text').textContent = isEn ? randomAnswer.answer : randomAnswer.answerTH;
+            document.getElementById('answer-message').textContent = isEn ? randomAnswer.message : randomAnswer.messageTH;
             
             document.getElementById('yesno-intro').classList.add('hidden');
             document.getElementById('yesno-result').classList.remove('hidden');
@@ -746,14 +881,16 @@
             // Draw a random card
             currentCard = tarotCards[Math.floor(Math.random() * tarotCards.length)];
             const reversed = Math.random() > 0.5;
+            const isEn = currentLanguage === 'en';
+            const t = translations[currentLanguage];
             
             const cardImage = `https://sacred-texts.com/tarot/pkt/img/${currentCard.code}.jpg`;
             
             // Display card
             document.getElementById('chat-card-img').src = cardImage;
             document.getElementById('chat-card-img').style.transform = reversed ? 'rotate(180deg)' : 'rotate(0deg)';
-            document.getElementById('chat-card-name').textContent = currentCard.name + (reversed ? ' (Reversed)' : '');
-            document.getElementById('chat-card-meaning').textContent = currentCard.meaning;
+            document.getElementById('chat-card-name').textContent = (isEn ? currentCard.name : currentCard.nameTH) + (reversed ? ` ${t.reversed}` : '');
+            document.getElementById('chat-card-meaning').textContent = isEn ? currentCard.meaning : currentCard.meaningTH;
             
             // Show chat interface
             document.getElementById('chat-intro').classList.add('hidden');
@@ -761,7 +898,13 @@
             
             // Initialize chat with AI greeting
             chatHistory = [];
-            const greeting = `Hello! I've drawn ${currentCard.name} for you. ${currentCard.prediction} ${currentCard.advice}\n\nWhat would you like to know about this reading? Feel free to ask about how it applies to your specific situation.`;
+            const cardName = isEn ? currentCard.name : currentCard.nameTH;
+            const prediction = isEn ? currentCard.prediction : currentCard.predictionTH;
+            const advice = isEn ? currentCard.advice : currentCard.adviceTH;
+            
+            const greeting = isEn 
+                ? `Hello! I've drawn ${cardName} for you. ${prediction} ${advice}\n\nWhat would you like to know about this reading? Feel free to ask about how it applies to your specific situation.`
+                : `สวัสดีค่ะ! ฉันได้จั่วไพ่ ${cardName} ให้คุณ ${prediction} ${advice}\n\nคุณอยากรู้อะไรเกี่ยวกับการอ่านไพ่นี้? อย่าลังเลที่จะถามว่ามันเกี่ยวข้องกับสถานการณ์ของคุณอย่างไร`;
             
             addMessage('ai', greeting);
         }
@@ -770,9 +913,10 @@
             const messagesDiv = document.getElementById('chat-messages');
             const messageDiv = document.createElement('div');
             messageDiv.className = `chat-message ${sender}`;
+            const t = translations[currentLanguage];
             
             if (sender === 'ai') {
-                messageDiv.innerHTML = `<strong>✨ Tarot Guide:</strong><br>${text}`;
+                messageDiv.innerHTML = `<strong>${t.tarotGuide}</strong><br>${text}`;
             } else {
                 messageDiv.textContent = text;
             }
@@ -793,12 +937,44 @@
             
             // Disable send button
             const sendBtn = document.getElementById('send-btn');
+            const t = translations[currentLanguage];
             sendBtn.disabled = true;
-            sendBtn.textContent = 'Thinking';
-            sendBtn.innerHTML = 'Thinking<span class="loading-dots"></span>';
+            sendBtn.innerHTML = (currentLanguage === 'en' ? 'Thinking' : 'กำลังคิด') + '<span class="loading-dots"></span>';
             
             // Add to history
             chatHistory.push({ role: 'user', content: message });
+            
+            const isEn = currentLanguage === 'en';
+            const cardName = isEn ? currentCard.name : currentCard.nameTH;
+            const meaning = isEn ? currentCard.meaning : currentCard.meaningTH;
+            const prediction = isEn ? currentCard.prediction : currentCard.predictionTH;
+            const advice = isEn ? currentCard.advice : currentCard.adviceTH;
+            
+            const systemPrompt = isEn 
+                ? `You are a wise and compassionate tarot guide. The user has drawn the tarot card "${cardName}". 
+
+Card meaning: ${meaning}
+Prediction: ${prediction}
+Advice: ${advice}
+
+Previous conversation:
+${chatHistory.slice(-4).map(m => `${m.role}: ${m.content}`).join('\n')}
+
+Current question: ${message}
+
+Provide a thoughtful, personalized response that relates the card's wisdom to their specific question. Be warm, insightful, and encouraging. Keep your response under 150 words.`
+                : `คุณเป็นผู้นำทางทาโรต์ที่ฉลาดและมีความเมตตา ผู้ใช้ได้จั่วไพ่ทาโรต์ "${cardName}"
+
+ความหมายของไพ่: ${meaning}
+คำทำนาย: ${prediction}
+คำแนะนำ: ${advice}
+
+การสนทนาก่อนหน้า:
+${chatHistory.slice(-4).map(m => `${m.role}: ${m.content}`).join('\n')}
+
+คำถามปัจจุบัน: ${message}
+
+ให้คำตอบที่มีความคิดและเป็นส่วนตัวที่เชื่อมโยงภูมิปัญญาของไพ่กับคำถามเฉพาะของพวกเขา จงอบอุ่น ลึกซึ้ง และให้กำลังใจ ตอบภาษาไทยไม่เกิน 150 คำ`;
             
             try {
                 // Call Claude API
@@ -813,18 +989,7 @@
                         messages: [
                             {
                                 role: 'user',
-                                content: `You are a wise and compassionate tarot guide. The user has drawn the tarot card "${currentCard.name}". 
-
-Card meaning: ${currentCard.meaning}
-Prediction: ${currentCard.prediction}
-Advice: ${currentCard.advice}
-
-Previous conversation:
-${chatHistory.slice(-4).map(m => `${m.role}: ${m.content}`).join('\n')}
-
-Current question: ${message}
-
-Provide a thoughtful, personalized response that relates the card's wisdom to their specific question. Be warm, insightful, and encouraging. Keep your response under 150 words.`
+                                content: systemPrompt
                             }
                         ]
                     })
@@ -838,12 +1003,15 @@ Provide a thoughtful, personalized response that relates the card's wisdom to th
                 chatHistory.push({ role: 'assistant', content: aiResponse });
                 
             } catch (error) {
-                addMessage('ai', "I apologize, but I'm having trouble connecting right now. Please try asking your question again in a moment.");
+                const errorMsg = isEn 
+                    ? "I apologize, but I'm having trouble connecting right now. Please try asking your question again in a moment."
+                    : "ขออภัยค่ะ ตอนนี้มีปัญหาในการเชื่อมต่อ กรุณาลองถามคำถามอีกครั้งในอีกสักครู่";
+                addMessage('ai', errorMsg);
             }
             
             // Re-enable send button
             sendBtn.disabled = false;
-            sendBtn.textContent = 'Send';
+            sendBtn.textContent = t.chatSendBtn;
         }
 
         function resetChat() {
